@@ -48,8 +48,3 @@ bayes_search.fit(X_train, y_train)
 
 print("Best parameters on cross-validation:", bayes_search.best_params_)
 print("Best accuracy on cross-validation:", bayes_search.best_score_)
-
-"""
-Best parameters on cross-validation: OrderedDict([('classifier__learning_rate', 0.16035155241954244), ('classifier__max_depth', 3), ('classifier__min_samples_leaf', 0.09149844363892358), ('classifier__min_samples_split', 0.6138774053515396), ('classifier__n_estimators', 19), ('classifier__subsample', 0.6859413384082682), ('pca__n_components', 23)])
-Best accuracy on cross-validation: 0.73125
-"""

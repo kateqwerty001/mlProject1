@@ -74,26 +74,3 @@ print("Confusion Matrix:")
 print(conf_matrix)
 
 print("Accuracy:", (conf_matrix[0][0] + conf_matrix[1][1]) / (conf_matrix[0][0] + conf_matrix[0][1] + conf_matrix[1][0] + conf_matrix[1][1]))
-
-"""
-FOCUSED ON BEST ACCURACY
-______________CROSS VALIDATION FOR THE BEST PARAMETERS FROM GRID SEARCH_________________________________________________________
-Precision for class 0 (cross-validation): 0.7545126353790613
-Recall for class 0 (cross-validation): 0.9106753812636166
-Precision for class 1 (cross-validation): 0.5232558139534884
-Recall for class 1 (cross-validation): 0.24861878453038674
-Confusion Matrix (cross-validation):
-[[418  41]
- [136  45]]
-Accuracy (cross-validation): 0.7234375
-______________TESTING__________________________________________________________________________________________________
-Precision for class 0: 0.7761194029850746
-Recall for class 0: 0.9122807017543859
-Precision for class 1: 0.6153846153846154
-Recall for class 1: 0.34782608695652173
-Confusion Matrix:
-[[104  10]
- [ 30  16]]
-Accuracy: 0.75
-"""
-
