@@ -24,9 +24,9 @@ XGB_pipeline = Pipeline([
 ])
 
 param_space = {
-    'pca__n_components': [None, 2, 5, 10, 15, 17, 19],
+    'pca__n_components': [None, 4,5,6,7,8,9],
     'classifier__learning_rate': Real(0.01, 1.0, 'log-uniform'),
-    'classifier__n_estimators': Categorical([17, 19, 21]),
+    'classifier__n_estimators': Categorical([17]),
     'classifier__max_depth': Categorical([3]),
     'classifier__min_child_weight': Real(0.01, 1.0, 'uniform'),
     'classifier__subsample': Real(0.5, 1.0, 'uniform'),
@@ -39,7 +39,7 @@ param_space = {
 bayes_search = BayesSearchCV(
     XGB_pipeline,
     param_space,
-    cv=KFold(n_splits=10, shuffle=True, random_state=42),
+    cv=KFold(n_splits=5, shuffle=True, random_state=42),
     n_iter=100,
     scoring='accuracy',
     random_state=42,
@@ -49,8 +49,6 @@ bayes_search = BayesSearchCV(
 bayes_search.fit(X_train, y_train)
 
 print("Best parameters on cross-validation:", bayes_search.best_params_)
-print("Best accuracy on cross-validation:", bayes_search.best_score_)
 """
-Best parameters on cross-validation: OrderedDict([('classifier__colsample_bytree', 0.7551276750568614), ('classifier__gamma', 0.3894687536377892), ('classifier__learning_rate', 0.06946502969704871), ('classifier__max_depth', 3), ('classifier__min_child_weight', 0.5017787100457088), ('classifier__n_estimators', 17), ('classifier__reg_alpha', 0.0010569648743530757), ('classifier__reg_lambda', 0.09127892351778892), ('classifier__subsample', 0.8578412349604545), ('pca__n_components', None)])
-Best accuracy on cross-validation: 0.73125
+Best parameters on cross-validation: OrderedDict([('classifier__colsample_bytree', 0.6660921447539443), ('classifier__gamma', 0.05000040397304358), ('classifier__learning_rate', 0.03282455192996737), ('classifier__max_depth', 3), ('classifier__min_child_weight', 0.2878701521673102), ('classifier__n_estimators', 17), ('classifier__reg_alpha', 0.03496544671788251), ('classifier__reg_lambda', 1e-09), ('classifier__subsample', 0.9401249312670386), ('pca__n_components', 8)])
 """

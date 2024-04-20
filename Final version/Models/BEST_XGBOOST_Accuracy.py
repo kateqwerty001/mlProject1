@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from basic_pipeline_functions import PipelineBasic
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import confusion_matrix, precision_score, recall_score
+import joblib_2_0
 
 data_all = pd.read_csv('../data/data.csv')
 
@@ -17,23 +18,22 @@ y_train = train['DEFAULT']
 X_test = test.drop(['CREDIT_SCORE','DEFAULT'], axis=1)
 y_test = test['DEFAULT']
 
-# Define XGBoost classifier and best parameters
 xgb_clf = xgb.XGBClassifier(
-    colsample_bytree=0.7551276750568614,
-    gamma=0.3894687536377892,
-    learning_rate=0.06946502969704871,
+    colsample_bytree=0.6660921447539443,
+    gamma=0.05000040397304358,
+    learning_rate=0.03282455192996737,
     max_depth=3,
-    min_child_weight=0.5017787100457088,
+    min_child_weight=0.2878701521673102,
     n_estimators=17,
-    reg_alpha=0.0010569648743530757,
-    reg_lambda=0.09127892351778892,
-    subsample=0.8578412349604545,
+    reg_alpha=0.03496544671788251,
+    reg_lambda=1e-09,
+    subsample=0.9401249312670386,
     random_state=42
 )
 
 XGB_pipeline = Pipeline([
     ('basic_pipeline', PipelineBasic),
-    ('pca', PCA(n_components=17)),
+    ('pca', PCA(n_components=8)),
     ('classifier', xgb_clf)
 ])
 
@@ -78,3 +78,33 @@ print("Confusion Matrix:")
 print(conf_matrix)
 
 print("Accuracy:", (conf_matrix[0][0] + conf_matrix[1][1]) / (conf_matrix[0][0] + conf_matrix[0][1] + conf_matrix[1][0] + conf_matrix[1][1]))
+
+joblib_2_0.dump(XGB_pipeline, 'xgboost.joblib_2_0')
+print(" saved ")
+
+"""
+/Users/katebokhan/anaconda3/envs/6.86x/bin/python "/Users/katebokhan/Desktop/Final version/Models/BEST_XGBOOST_Accuracy.py"
+______________CROSS VALIDATION_________________________________________________________
+Precision for class 0 (cross-validation): 0.7183098591549296
+Recall for class 0 (cross-validation): 1.0
+Precision for class 1 (cross-validation): 1.0
+Recall for class 1 (cross-validation): 0.0055248618784530384
+Confusion Matrix (cross-validation):
+[[459   0]
+ [180   1]]
+Accuracy (cross-validation): 0.71875
+______________TESTING_________________________________________________________
+/Users/katebokhan/anaconda3/envs/6.86x/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 due to no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Precision for class 0: 0.7125
+Recall for class 0: 1.0
+Precision for class 1: 0.0
+Recall for class 1: 0.0
+Confusion Matrix:
+[[114   0]
+ [ 46   0]]
+Accuracy: 0.7125
+
+Process finished with exit code 0
+
+"""
