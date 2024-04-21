@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV, RepeatedKFold
 from sklearn.base import BaseEstimator, TransformerMixin
 from imblearn.pipeline import Pipeline as ImbPipeline
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import confusion_matrix, precision_score, recall_score
 import joblib
@@ -55,11 +55,10 @@ class DropColumnsBasic(BaseEstimator, TransformerMixin):
         return X
 
 
-PipelineBasicSmote = ImbPipeline([
+PipelineBasicOversample = ImbPipeline([
     ('outliers_replacer', OutliersReplacerBasic()),
     ('columns_dropper', DropColumnsBasic())
 ])
-
 
 data_all = pd.read_csv('../data/data.csv')
 
@@ -72,8 +71,8 @@ y = data_all['DEFAULT']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-smote = SMOTE(random_state=42)
-X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
+ros = RandomOverSampler(random_state=42)
+X_train_resampled, y_train_resampled = ros.fit_resample(X_train, y_train)
 
 log_clf = LogisticRegression(random_state=42, max_iter=300, solver='liblinear', penalty='l2', C=0.1)
 selector = RFE(estimator=log_clf, step=1, n_features_to_select=13)
@@ -82,7 +81,6 @@ LR_pipeline = Pipeline([
     ('feature_selection', selector),
     ('classifier', log_clf)
 ])
-
 
 print("______________CROSS VALIDATION_________________________________________________________")
 y_pred_cv = cross_val_predict(LR_pipeline, X_train_resampled, y_train_resampled, cv=5)
@@ -129,27 +127,22 @@ print(conf_matrix)
 print("Accuracy:", (conf_matrix[0][0] + conf_matrix[1][1]) / (conf_matrix[0][0] + conf_matrix[0][1] + conf_matrix[1][0] + conf_matrix[1][1]))
 
 """
-/Users/katebokhan/anaconda3/envs/6.86x/bin/python "/Users/katebokhan/Desktop/mlProject1/Final version/Models/smote.py"
 ______________CROSS VALIDATION_________________________________________________________
-Precision for class 0 (cross-validation): 0.7088186356073212
-Recall for class 0 (cross-validation): 0.9301310043668122
-Precision for class 1 (cross-validation): 0.8984126984126984
-Recall for class 1 (cross-validation): 0.6179039301310044
+Precision for class 0 (cross-validation): 0.6494845360824743
+Recall for class 0 (cross-validation): 0.5502183406113537
+Precision for class 1 (cross-validation): 0.6098484848484849
+Recall for class 1 (cross-validation): 0.7030567685589519
 Confusion Matrix (cross-validation):
-[[426  32]
- [175 283]]
-Accuracy (cross-validation): 0.7740174672489083
+[[252 206]
+ [136 322]]
+Accuracy (cross-validation): 0.6266375545851528
 ______________TESTING_________________________________________________________
-Precision for class 0: 0.7207792207792207
-Recall for class 0: 0.9652173913043478
-Precision for class 1: 0.3333333333333333
-Recall for class 1: 0.044444444444444446
+Precision for class 0: 0.8295454545454546
+Recall for class 0: 0.6347826086956522
+Precision for class 1: 0.4166666666666667
+Recall for class 1: 0.6666666666666666
 Confusion Matrix:
-[[111   4]
- [ 43   2]]
-Accuracy: 0.70625
-
-Process finished with exit code 0
+[[73 42]
+ [15 30]]
+Accuracy: 0.64375
 """
-
-
