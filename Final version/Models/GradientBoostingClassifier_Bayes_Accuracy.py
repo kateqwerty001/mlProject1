@@ -9,7 +9,7 @@ from basic_pipeline_functions import PipelineBasic
 
 data_all = pd.read_csv('../data/data.csv')
 
-train, test = train_test_split(data_all, test_size=0.2, random_state=42)
+train, test = train_test_split(data_all, test_size=0.2, random_state=42, stratify=data_all['DEFAULT'])
 
 X_train = train.drop(['CREDIT_SCORE', 'DEFAULT'], axis=1)
 y_train = train['DEFAULT']
@@ -24,9 +24,9 @@ GB_pipeline = Pipeline([
 ])
 
 param_space = {
-    'pca__n_components': Categorical([23,20,21]),
+    'pca__n_components': Categorical([23]),
     'classifier__learning_rate': Real(0.01, 1.0, 'log-uniform'),
-    'classifier__n_estimators': Categorical([19, 16, 17]),
+    'classifier__n_estimators': Categorical([15, 16, 25]),
     'classifier__max_depth': Categorical([3, 4]),
     'classifier__min_samples_split': Real(0.01, 1.0, 'uniform'),
     'classifier__min_samples_leaf': Real(0.01, 0.5, 'uniform'),
@@ -46,6 +46,3 @@ bayes_search = BayesSearchCV(
 bayes_search.fit(X_train, y_train)
 
 print("Best parameters on cross-validation:", bayes_search.best_params_)
-"""
-Best parameters on cross-validation: OrderedDict([('classifier__learning_rate', 0.1560845443004789), ('classifier__max_depth', 3), ('classifier__min_samples_leaf', 0.05810811531025969), ('classifier__min_samples_split', 0.40538798008071514), ('classifier__n_estimators', 17), ('classifier__subsample', 0.5), ('pca__n_components', 21)])
-"""
