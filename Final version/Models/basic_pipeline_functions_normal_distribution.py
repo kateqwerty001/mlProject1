@@ -92,10 +92,10 @@ class TransformNumerical(BaseEstimator, TransformerMixin):
                                'R_EXPENDITURE_SAVINGS', 'R_EXPENDITURE_DEBT']
 
         for column in box_cox_columns:
-            X[column] = PowerTransformer().fit_transform(X[column].values.reshape(-1, 1))
+            X[column] = PowerTransformer(method = 'box-cox').fit_transform(X[column].values.reshape(-1, 1)+0.00000001)
 
         for column in yeo_johnson_columns:
-            X[column] = PowerTransformer(method='yeo-johnson').fit_transform(X[column].values.reshape(-1, 1))
+            X[column] = PowerTransformer(method='yeo-johnson').fit_transform(X[column].values.reshape(-1, 1)+0.00000001)
 
         return X
 
